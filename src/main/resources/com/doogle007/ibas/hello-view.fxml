@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doogle007.ibas.controller.HelloController">
+   <children>
+      <StackPane style="-fx-background-color: #FFFFFF;">
+         <effect>
+            <Shadow blurType="GAUSSIAN" color="#0000007e" height="40.0" radius="19.5" width="40.0" />
+         </effect>
+      </StackPane>
+      <VBox>
+         <children>
+            <HBox prefHeight="425.0">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefWidth="100.0" spacing="2.0" style="-fx-background-color: #dddddd;">
+                     <children>
+                        <StackPane>
+                           <children>
+                              <ImageView fx:id="profileImage" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@images/profile.png" />
+                                 </image>
+                              </ImageView>
+                              <Circle fill="TRANSPARENT" radius="30.0" stroke="#dddddd" strokeType="OUTSIDE" strokeWidth="12.5" />
+                           </children>
+                        </StackPane>
+                        <HBox fx:id="buttonDevice" alignment="CENTER_LEFT" onMouseClicked="#onButtonDeviceClick" prefHeight="40.0" spacing="5.0">
+                           <children>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/device.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="设备" textFill="#666666" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="buttonMessage" alignment="CENTER_LEFT" onMouseClicked="#onButtonMessageClick" prefHeight="40.0" spacing="5.0">
+                           <children>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/message.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="通知" textFill="#666666" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="buttonServer" alignment="CENTER_LEFT" onMouseClicked="#onButtonServerClick" prefHeight="40.0" spacing="5.0">
+                           <children>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/cloud.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="服务器" textFill="#666666" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="buttonSetting" alignment="CENTER_LEFT" onMouseClicked="#onButtonSettingClick" prefHeight="40.0" spacing="5.0">
+                           <children>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/setting.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="设置" textFill="#666666" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="buttonAbout" alignment="CENTER_LEFT" onMouseClicked="#onButtonAboutClick" prefHeight="40.0" spacing="5.0">
+                           <children>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/about.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="关于" textFill="#666666" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </VBox>
+                  <VBox prefWidth="700.0" style="-fx-background-color: #ffffff;">
+                     <children>
+                        <HBox fx:id="root" alignment="CENTER_RIGHT" prefHeight="50.0" style="-fx-background-color: #eeeeee;">
+                           <children>
+                              <StackPane fx:id="buttonClose" onMouseClicked="#onButtonCloseClick" onMouseEntered="#onButtonCloseEnter" onMouseExited="#onButtonCloseExit" prefHeight="30.0" prefWidth="30.0">
+                                 <children>
+                                    <Line endX="33.0" endY="33.0" startX="17.0" startY="17.0" stroke="#9f9f9f" strokeWidth="2.0" />
+                                    <Line endX="17.0" endY="33.0" startX="33.0" startY="17.0" stroke="#9f9f9f" strokeWidth="2.0" />
+                                 </children>
+                              </StackPane>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </HBox>
+                        <Pane fx:id="innerPane" prefHeight="375.0" prefWidth="700.0">
+                           <children>
+                              <Label layoutX="242.0" layoutY="164.0" text="欢迎使用智能楼宇警报系统" textFill="#4f4f4f">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="25.0" style="-fx-background-color: #cccccc;">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefWidth="400.0">
+                     <children>
+                        <Label text="欢迎使用智能楼宇警报系统" textFill="#444444">
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT">
+                     <children>
+                        <Label fx:id="labelConnectState" alignment="CENTER_RIGHT" prefWidth="400.0" textFill="#444444">
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</StackPane>

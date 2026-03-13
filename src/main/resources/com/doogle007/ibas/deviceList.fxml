@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doogle007.ibas.controller.DeviceController">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="417.0" spacing="10.0" style="-fx-background-color: #f7f7f7;">
+         <children>
+            <Label text="设备组" />
+            <ChoiceBox fx:id="choiceBoxGroups" prefWidth="150.0" />
+            <HBox spacing="5.0">
+               <children>
+                  <StackPane fx:id="buttonAdd" onMouseClicked="#onButtonAddClick" onMouseEntered="#onButtonAddEnter" onMouseExited="#onButtonAddExit" prefHeight="36.0" prefWidth="36.0" style="-fx-background-radius: 8;">
+                     <children>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/add.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="buttonEdit" onMouseClicked="#onButtonEditClick" onMouseEntered="#onButtonEditEnter" onMouseExited="#onButtonEditExit" prefHeight="36.0" prefWidth="36.0" style="-fx-background-radius: 8;">
+                     <children>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/edit.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="buttonDelete" onMouseClicked="#onButtonDeleteClick" onMouseEntered="#onButtonDeleteEnter" onMouseExited="#onButtonDeleteExit" prefHeight="36.0" prefWidth="36.0" style="-fx-background-radius: 8;">
+                     <children>
+                        <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icons/delete.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+               </children>
+               <padding>
+                  <Insets bottom="2.0" top="2.0" />
+               </padding>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+         </padding>
+      </HBox>
+      <ScrollPane depthTest="DISABLE" hbarPolicy="NEVER" maxHeight="-Infinity" prefHeight="325.0" prefWidth="700.0" style="-fx-background-insets: 0; -fx-background-color: transparent;" vbarPolicy="ALWAYS">
+         <content>
+            <VBox alignment="TOP_CENTER" minHeight="325.0" prefWidth="680.0" style="-fx-background-color: #ffffff;">
+               <children>
+                  <SplitPane fx:id="headDevice" dividerPositions="0.2, 0.4, 0.6, 0.8" minHeight="50.0" style="-fx-background-color: #ffffff; -fx-box-border: transparent;">
+                     <items>
+                        <HBox fx:id="deviceName" alignment="CENTER" minWidth="50.0">
+                           <children>
+                              <Label text="设备名称" textFill="#666666" />
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="logicalAddress" alignment="CENTER" minWidth="50.0">
+                           <children>
+                              <Label text="逻辑地址" textFill="#666666" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="alarmState" alignment="CENTER" minWidth="50.0">
+                           <children>
+                              <Label text="警报状态" textFill="#666666" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="postTime" alignment="CENTER" minWidth="50.0">
+                           <children>
+                              <Label text="更新时间" textFill="#666666" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="loginState" alignment="CENTER" minWidth="50.0">
+                           <children>
+                              <Label text="登录状态" textFill="#666666" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                     </items>
+                  </SplitPane>
+                  <Line endX="630.0" startX="50.0" stroke="#dddddd">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Line>
+                  <VBox fx:id="vBoxDevice" spacing="5.0">
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </VBox>
+                  <Label fx:id="connectingState" text="云平台连接状态" textFill="#aaaaaa">
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="50.0" right="50.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>

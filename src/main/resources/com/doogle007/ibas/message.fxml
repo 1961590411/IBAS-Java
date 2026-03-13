@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="375.0" prefWidth="700.0" spacing="20.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.doogle007.ibas.controller.MessageController">
+   <children>
+      <Label alignment="TOP_LEFT" text="消息通知栏" textFill="#666666" />
+      <ListView fx:id="messageList" prefHeight="315.0" prefWidth="700.0" style="-fx-background-insets: 0;" />
+   </children>
+   <padding>
+      <Insets top="20.0" />
+   </padding>
+</VBox>
