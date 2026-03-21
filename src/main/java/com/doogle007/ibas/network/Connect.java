@@ -6,16 +6,19 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Connect {
     private static MqttClient client;
+    private static final String helloSubTopic = "IBAS/system/device/hello/#";
+    private static final List<String> groupSubTopicList = new ArrayList<>();
     public static void start() {
-        String subTopic = "TestClient";
-        String content = "{\n\"msg\": \"Hello World\"\n}";
-        String broker;
+        //Improve me: 使用不重复的字符串作为clientid
         String clientId = "TestUser";
         String address = Options.getInstance().get("ServerAddress", "120.26.133.159");
         String port = Options.getInstance().get("ServerPort", "1883");
-        broker = "tcp://" + address + ":" + port;
+        String broker = "tcp://" + address + ":" + port;
 
         MemoryPersistence persistence = new MemoryPersistence();
 
@@ -25,7 +28,7 @@ public class Connect {
             // MQTT 连接选项
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setUserName("emqx_test");
-            connOpts.setPassword("00000000".toCharArray());
+            connOpts.setPassword("IBAS".toCharArray());
             // 保留会话
             connOpts.setCleanSession(true);
 
@@ -37,10 +40,9 @@ public class Connect {
             client.connect(connOpts);
 
             System.out.println("Connected");
-            System.out.println("Publishing message: " + content);
 
             // 订阅
-            client.subscribe(subTopic);
+            client.subscribe(helloSubTopic);
 
         } catch (MqttException me) {
             System.out.println("reason " + me.getReasonCode());
@@ -63,4 +65,23 @@ public class Connect {
         return client.isConnected();
     }
 
+    public static void groupSubTopicAdd(String groupName) throws MqttException {
+        if(searchGroupIndex(groupName) != -1)
+            return;
+        groupSubTopicList.add(groupName);
+        client.subscribe("IBAS/system/device/group/"+groupName);
+    }
+    public static void groupSubTopicDel(String groupName) throws MqttException {
+        if(searchGroupIndex(groupName) == -1)
+            return;
+        groupSubTopicList.remove(groupName);
+        client.unsubscribe("IBAS/system/device/group/"+groupName);
+    }
+
+    private static int searchGroupIndex(String groupName) {
+        for (int i = 0; i < groupSubTopicList.size(); i++)
+            if (groupSubTopicList.get(i).equals(groupName))
+                return i;
+        return -1;
+    }
 }

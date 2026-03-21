@@ -8,29 +8,32 @@ import org.json.JSONObject;
 public class Device implements Comparable<Device> {
     public String device_name;
     public String logical_address;
+    public String deviceID;
+    public String group;
     public long timestamp;
     public boolean switch_auto;
     public boolean switch_manual;
     public boolean online;
 
-    public Device(String device_name, String logical_address, long timestamp, boolean switch_auto, boolean switch_manual, boolean online) {
+    public Device(String device_name, String logical_address, String deviceID, String group) {
         this.device_name = device_name;
         this.logical_address = logical_address;
-        this.timestamp = timestamp;
-        this.switch_auto = switch_auto;
-        this.switch_manual = switch_manual;
-        this.online = online;
+        this.deviceID = deviceID;
+        this.group = group;
+        this.timestamp = System.currentTimeMillis();
+        this.switch_auto = false;
+        this.switch_manual = false;
+        this.online = true;
     }
 
     public static Device jsonToDevice(String json) {
         try {
             JSONObject jsonObject = new JSONObject(json);
-            boolean switchAuto = jsonObject.getBoolean("AlarmSwitchAuto");
-            boolean switchManual = jsonObject.getBoolean("AlarmSwitchManual");
             String address = jsonObject.getString("LogicalAddress");
-            String deviceID = jsonObject.getString("DeviceID");
-            long timestamp = jsonObject.has("Timestamp") ? jsonObject.getLong("Timestamp") : System.currentTimeMillis();
-            return new Device(deviceID, address, timestamp, switchAuto, switchManual, true);
+            String deviceID = jsonObject.getString("ClientID");
+            String group = jsonObject.getString("Group");
+            String deviceName = jsonObject.getString("Name");
+            return new Device(deviceName, address, deviceID,group);
         } catch (JSONException e) {
             Logger.error(e.toString());
         }
