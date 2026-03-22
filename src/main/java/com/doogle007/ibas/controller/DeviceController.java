@@ -17,7 +17,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -124,8 +123,8 @@ public class DeviceController {
             hBoxDevice.setPrefHeight(50);
             hBoxDevice.setMinHeight(hBoxDevice.getHeight());
             hBoxDevice.setAlignment(Pos.CENTER_LEFT);
-            Label deviceName = new Label(device.device_name);
-            Label logicalAddress = new Label(device.logical_address);
+            Label deviceName = new Label(device.name);
+            Label logicalAddress = new Label(device.logicalAddress);
             HBox alarmState = new HBox();
 
             ImageView manualAlarm = new ImageView(imageManualAlarm);
@@ -150,11 +149,11 @@ public class DeviceController {
             online.setPreserveRatio(true);
             safe.setPreserveRatio(true);
 
-            if (device.switch_manual)
+            if (device.switchManual)
                 alarmState.getChildren().add(manualAlarm);
-            if (device.switch_auto)
+            if (device.switchAuto)
                 alarmState.getChildren().add(autoAlarm);
-            if (!device.switch_manual && !device.switch_auto && device.online)
+            if (!device.switchManual && !device.switchAuto && device.online)
                 alarmState.getChildren().add(safe);
 
             Label postTime = new Label(timeAgo(device.timestamp));
@@ -165,7 +164,7 @@ public class DeviceController {
 
             if (!device.online)
                 hBoxDevice.setStyle("-fx-border-color: #5F5F5F; -fx-border-width: 2; -fx-background-color: #F8F8F8; -fx-background-radius: 10; -fx-border-radius: 10");
-            else if (device.switch_manual || device.switch_auto)
+            else if (device.switchManual || device.switchAuto)
                 hBoxDevice.setStyle("-fx-border-color: #FF5F5F; -fx-border-width: 2; -fx-background-color: #F8F8F8; -fx-background-radius: 10; -fx-border-radius: 10");
             else
                 hBoxDevice.setStyle("-fx-border-color: #5FFF5F; -fx-border-width: 2; -fx-background-color: #F8F8F8; -fx-background-radius: 10; -fx-border-radius: 10");
@@ -189,7 +188,7 @@ public class DeviceController {
             hBoxDevice.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
                 if (!device.online)
                     hBoxDevice.setStyle("-fx-border-color: #5F5F5F; -fx-border-width: 2; -fx-background-color: #E8E8E8; -fx-background-radius: 10; -fx-border-radius: 10");
-                else if (device.switch_manual || device.switch_auto)
+                else if (device.switchManual || device.switchAuto)
                     hBoxDevice.setStyle("-fx-border-color: #FF5F5F; -fx-border-width: 2; -fx-background-color: #E8E8E8; -fx-background-radius: 10; -fx-border-radius: 10");
                 else
                     hBoxDevice.setStyle("-fx-border-color: #5FFF5F; -fx-border-width: 2; -fx-background-color: #E8E8E8; -fx-background-radius: 10; -fx-border-radius: 10");
@@ -198,7 +197,7 @@ public class DeviceController {
             hBoxDevice.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
                 if (!device.online)
                     hBoxDevice.setStyle("-fx-border-color: #5F5F5F; -fx-border-width: 2; -fx-background-color: #F8F8F8; -fx-background-radius: 10; -fx-border-radius: 10");
-                else if (device.switch_manual || device.switch_auto)
+                else if (device.switchManual || device.switchAuto)
                     hBoxDevice.setStyle("-fx-border-color: #FF5F5F; -fx-border-width: 2; -fx-background-color: #F8F8F8; -fx-background-radius: 10; -fx-border-radius: 10");
                 else
                     hBoxDevice.setStyle("-fx-border-color: #5FFF5F; -fx-border-width: 2; -fx-background-color: #F8F8F8; -fx-background-radius: 10; -fx-border-radius: 10");

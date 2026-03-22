@@ -83,7 +83,7 @@ public class GroupController {
     @FXML
     protected void onButtonEditClick() {
         String name = textField.getText();
-        if (DeviceGroup.existGroup(name) >= 0)
+        if (DeviceGroup.searchGroupIndex(name) >= 0)
             labelFail.setText("该设备组已存在");
         else if (name.isEmpty())
             labelFail.setText("设备组名称不可为空");

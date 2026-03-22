@@ -1,6 +1,7 @@
 package com.doogle007.ibas.device;
 
 import com.doogle007.ibas.Logger;
+import org.json.JSONObject;
 
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -19,7 +20,8 @@ public class DeviceIO {
             try {
                 if (Files.exists(filePath)) {
                     String data = Files.readString(filePath);
-                    Device device = Device.jsonToDevice(data);
+                    JSONObject jsonObject = new JSONObject(data);
+                    Device device = Device.jsonToDevice(jsonObject);
                     if (device != null) {
                         device.online = false;
                     }
@@ -49,11 +51,11 @@ public class DeviceIO {
     }
 
     public static void writeDevice(Device device) {
-        DeviceGroup group = DeviceGroup.includeDevice(device.device_name);
-        Path path = Paths.get("device/" + group.getName() + "/" + device.device_name + ".json");
+        DeviceGroup group = DeviceGroup.includeDevice(device.name);
+        Path path = Paths.get("device/" + group.getName() + "/" + device.name + ".json");
         try {
             Files.writeString(path, device.toJson(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-            Logger.info("保存的设备名称：" + device.device_name);
+            Logger.info("保存的设备名称：" + device.name);
         } catch (IOException ignored) {
         }
     }

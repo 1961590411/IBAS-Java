@@ -1,5 +1,6 @@
 package com.doogle007.ibas.network;
 
+import com.doogle007.ibas.Logger;
 import com.doogle007.ibas.Options;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -14,7 +15,7 @@ public class Connect {
     private static final String helloSubTopic = "IBAS/system/device/hello/#";
     private static final List<String> groupSubTopicList = new ArrayList<>();
     public static void start() {
-        //Improve me: 使用不重复的字符串作为clientid
+        //TODO: Improve me: 使用不重复的字符串作为clientID
         String clientId = "TestUser";
         String address = Options.getInstance().get("ServerAddress", "120.26.133.159");
         String port = Options.getInstance().get("ServerPort", "1883");
@@ -27,7 +28,7 @@ public class Connect {
 
             // MQTT 连接选项
             MqttConnectOptions connOpts = new MqttConnectOptions();
-            connOpts.setUserName("emqx_test");
+            connOpts.setUserName("EMQX_test");
             connOpts.setPassword("IBAS".toCharArray());
             // 保留会话
             connOpts.setCleanSession(true);
@@ -49,8 +50,8 @@ public class Connect {
             System.out.println("msg " + me.getMessage());
             System.out.println("loc " + me.getLocalizedMessage());
             System.out.println("cause " + me.getCause());
-            System.out.println("excep " + me);
-            me.printStackTrace();
+            System.out.println("exception " + me);
+            Logger.error(me.toString());
         }
     }
 
