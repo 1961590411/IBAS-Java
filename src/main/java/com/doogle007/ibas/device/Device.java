@@ -101,7 +101,9 @@ public class Device implements Comparable<Device> {
 
     public String toJson() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("DeviceID", name);
+        jsonObject.put("Name", name);
+        jsonObject.put("ClientID", clientID);
+        jsonObject.put("Group", group);
         jsonObject.put("LogicalAddress", logicalAddress);
         jsonObject.put("Timestamp", timestamp);
         jsonObject.put("AlarmSwitchAuto", switchAuto);

@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 public class DeviceIO {
     public static List<Device> readDeviceList(String groupName) {
         List<Device> deviceList = new ArrayList<>();
+        //读取文件，若不存在则创建文件夹
         List<String> fileList = readDeviceFileList(groupName);
         for (String fileName : fileList) {
             Path filePath = Paths.get("device/" + groupName + "/" + fileName);
@@ -51,8 +52,9 @@ public class DeviceIO {
     }
 
     public static void writeDevice(Device device) {
+        System.out.println("保存设备中，设备名称: " +  device.name);
         DeviceGroup group = DeviceGroup.includeDevice(device.name);
-        Path path = Paths.get("device/" + group.getName() + "/" + device.name + ".json");
+        Path path = Paths.get("device/" + group.getName() + "/" + device.clientID + ".json");
         try {
             Files.writeString(path, device.toJson(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
             Logger.info("保存的设备名称：" + device.name);
@@ -132,6 +134,17 @@ public class DeviceIO {
         try {
             Files.delete(path);
         } catch (IOException ignored) {
+        }
+    }
+
+    public static void deleteDevice(Device targetDevice) {
+        System.out.println("删除设备中，设备名称: " +  targetDevice.name);
+        Path path = Paths.get("device/" + targetDevice.group + "/" + targetDevice.clientID + ".json");
+        try {
+            Files.delete(path);
+            System.out.println("删除成功");
+        } catch (IOException e) {
+            Logger.error(e.toString());
         }
     }
 }

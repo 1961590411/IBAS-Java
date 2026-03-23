@@ -124,6 +124,7 @@ public class Callback implements MqttCallback {
             throw new RuntimeException(e);
         }
 
+
         //调试内容，完成后记得删除
         System.out.println("当前设备组总览");
         System.out.println("默认组");
@@ -132,6 +133,6 @@ public class Callback implements MqttCallback {
         System.out.println("\n设备组");
         for(DeviceGroup deviceGroup : DeviceGroup.DeviceGroupList)
             for(Device device : deviceGroup.deviceList)
-                System.out.println(device.name);
+                System.out.println(device.clientID + " "+device.name);
     }
 }

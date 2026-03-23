@@ -127,6 +127,7 @@ public class DeviceGroup {
             device.switchManual = targetDevice.switchManual;
             deviceList.set(index, device);
         }
+        DeviceIO.writeDevice(device);
 
         //检查其他所有设备组，比对设备ID，删除其他设备组中的该设备，用于防止未知的设备组转移
         //TODO: 我知道这样很浪费性能，但为了能跑先这样了，以后会解决的
@@ -138,6 +139,7 @@ public class DeviceGroup {
             for(Device targetDevice : group.deviceList){
                 if(targetDevice.clientID.equals(device.clientID)){
                     deviceList.remove(targetDevice);
+                    DeviceIO.deleteDevice(targetDevice);
                 }
             }
         }
@@ -146,17 +148,25 @@ public class DeviceGroup {
             for(Device targetDevice : defaultGroup.deviceList){
                 if(targetDevice.clientID.equals(device.clientID)){
                     deviceList.remove(targetDevice);
+                    DeviceIO.deleteDevice(targetDevice);
                 }
             }
         }
     }
 
-    public int searchDeviceIndex(String deviceID) {
+    public int searchDeviceIndex(String clientID) {
+        System.out.println("正在设备组"+this.name+"中寻找设备"+clientID);
+        System.out.println("当前组内设备:");
+        for(Device device : this.deviceList)
+            System.out.println(device.clientID);
         for (int index = 0; index < this.deviceList.size(); index++) {
             Device device = this.deviceList.get(index);
-            if (device.clientID.equals(deviceID))
+            if (device.clientID.equals(clientID)) {
+                System.out.println("搜寻成功! Index序列号 "+index);
                 return index;
+            }
         }
+        System.out.println("未找到匹配的ClientID");
         return -1;
     }
 }
