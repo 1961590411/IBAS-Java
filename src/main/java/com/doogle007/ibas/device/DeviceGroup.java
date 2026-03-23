@@ -7,7 +7,7 @@ import java.util.List;
 public class DeviceGroup {
     public static List<DeviceGroup> DeviceGroupList = DeviceGroup.initGroupList();
 
-    public static DeviceGroup defaultGroup = new DeviceGroup("Default Group");
+    public static DeviceGroup defaultGroup = new DeviceGroup("Default Group", false, true);
     private static List<DeviceGroup> initGroupList() {
         //创建新ArrayList，为List添加文件中的所有设备组
 
@@ -15,16 +15,19 @@ public class DeviceGroup {
         return DeviceIO.initGroupList();
     }
     public boolean subscribed = false;
+
+    private boolean isDefaultGroup = false;
     public List<Device> deviceList;
     private String name;
 
     public DeviceGroup(String name) {
-        new DeviceGroup(name, false);
+        this(name, false, false);
     }
 
-    public DeviceGroup(String name, boolean subscribed) {
+    public DeviceGroup(String name, boolean subscribed, boolean defaultGroup) {
         this.setName(name);
         this.subscribed = subscribed;
+        this.isDefaultGroup = defaultGroup;
         deviceList = new ArrayList<>();
     }
 
@@ -80,9 +83,11 @@ public class DeviceGroup {
     }
 
     public static int searchGroupIndex(String name) {
-        for (int index = 0; index < DeviceGroupList.size(); index++)
-            if (DeviceGroupList.get(index).name.equals(name))
+        for (int index = 0; index < DeviceGroupList.size(); index++) {
+            System.out.println(DeviceGroupList.get(index).getName());
+            if (DeviceGroupList.get(index).getName().equals(name))
                 return index;
+        }
         return -1;
     }
 
@@ -131,6 +136,14 @@ public class DeviceGroup {
                 continue;
             //检索其他设备组
             for(Device targetDevice : group.deviceList){
+                if(targetDevice.clientID.equals(device.clientID)){
+                    deviceList.remove(targetDevice);
+                }
+            }
+        }
+        //别忘了检查默认组
+        if(!isDefaultGroup){
+            for(Device targetDevice : defaultGroup.deviceList){
                 if(targetDevice.clientID.equals(device.clientID)){
                     deviceList.remove(targetDevice);
                 }

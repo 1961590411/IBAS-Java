@@ -12,6 +12,7 @@ import org.json.JSONObject;
 public class Callback implements MqttCallback {
     public void connectionLost(Throwable cause) {
         Logger.warn("已失去连接");
+        Logger.warn(cause.getMessage());
         System.out.println("已失去连接");
     }
 
@@ -117,10 +118,20 @@ public class Callback implements MqttCallback {
                 } else
                     deviceGroup = DeviceGroup.DeviceGroupList.get(index);
             } else
-                deviceGroup = DeviceGroup.DeviceGroupList.getFirst();
+                deviceGroup = DeviceGroup.defaultGroup;
             deviceGroup.updateDevice(device);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+
+        //调试内容，完成后记得删除
+        System.out.println("当前设备组总览");
+        System.out.println("默认组");
+        for(Device device : DeviceGroup.defaultGroup.deviceList)
+            System.out.println(device.name);
+        System.out.println("\n设备组");
+        for(DeviceGroup deviceGroup : DeviceGroup.DeviceGroupList)
+            for(Device device : deviceGroup.deviceList)
+                System.out.println(device.name);
     }
 }
