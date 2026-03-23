@@ -45,7 +45,7 @@ public class Callback implements MqttCallback {
         else if (topic.contains("IBAS/system/device/group/")) {
             System.out.println("正在处理Group主题");
             String groupName = topic.replace("IBAS/system/device/group/", "");
-            processGroupMessage(message, groupName);
+            //processGroupMessage(message, groupName);
         }
         else
             System.out.println("无法处理该主题");
@@ -96,7 +96,11 @@ public class Callback implements MqttCallback {
             Device device = Device.jsonToDevice(params);
 
             //只有在解析出错时，设备实例为空，方法直接返回
-            if (device == null) return;
+            if (device == null) {
+                Logger.error("不符合格式的JSON，提前结束");
+                return;
+            }
+            Logger.info("解析的设备名称: " + device.name);
 
             DeviceGroup deviceGroup;
             //判断设备是否隶属于某设备组

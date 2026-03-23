@@ -33,11 +33,12 @@ public class Device implements Comparable<Device> {
             String clientID = null;
             String group = null;
             String name = null;
-            if (!jsonObject.isNull("Name")) {
-                name = jsonObject.getString("Name");
-            }
             if (!jsonObject.isNull("ClientID")) {
                 clientID = jsonObject.getString("ClientID");
+            } else
+                return null;
+            if (!jsonObject.isNull("Name")) {
+                name = jsonObject.getString("Name");
             }
             if (!jsonObject.isNull("Group")) {
                 group = jsonObject.getString("Group");

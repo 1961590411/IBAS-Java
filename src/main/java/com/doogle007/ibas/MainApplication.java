@@ -14,11 +14,16 @@ public class MainApplication extends Application {
     public static void main(String[] args) {
         try {
             Connect.start();
+            //调试使用，记得删除
+            Connect.groupSubTopicAdd("AQNU1");
+            Connect.groupSubTopicAdd("AQNU2");
+            Connect.groupSubTopicAdd("AQNU3");
+            Connect.groupSubTopicDel("AQNU1");
         } catch (Exception e) {
             Logger.error("无法连接至云服务器");
             Logger.error(e.getMessage());
         }
-        launch();
+        //launch();
     }
 
     @Override

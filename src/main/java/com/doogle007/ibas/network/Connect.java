@@ -71,12 +71,14 @@ public class Connect {
             return;
         groupSubTopicList.add(groupName);
         client.subscribe("IBAS/system/device/group/"+groupName);
+        Logger.info("订阅新的设备组: " + groupName);
     }
     public static void groupSubTopicDel(String groupName) throws MqttException {
         if(searchGroupIndex(groupName) == -1)
             return;
         groupSubTopicList.remove(groupName);
         client.unsubscribe("IBAS/system/device/group/"+groupName);
+        Logger.info("取消订阅设备组: " + groupName);
     }
 
     private static int searchGroupIndex(String groupName) {

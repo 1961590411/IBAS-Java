@@ -61,6 +61,8 @@ public class DeviceIO {
     }
 
     public static List<DeviceGroup> initGroupList() {
+        //TODO: 因为在DeviceGroup中新写了初始化设备组的方法，这一段需要重写一下
+        //还有，文件用唯一ID保存，不要用name了，实例-默认组ID：default_group
         List<DeviceGroup> deviceGroupList = new ArrayList<>();
         List<String> groupNameList;
 

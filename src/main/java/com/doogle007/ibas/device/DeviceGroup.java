@@ -5,17 +5,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeviceGroup {
-    public static List<DeviceGroup> DeviceGroupList = DeviceIO.initGroupList();
+    public static List<DeviceGroup> DeviceGroupList = DeviceGroup.initGroupList();
+
+    public static DeviceGroup defaultGroup = new DeviceGroup("Default Group");
+    private static List<DeviceGroup> initGroupList() {
+        //创建新ArrayList，为List添加文件中的所有设备组
+
+        //完成后返回设备组
+        return DeviceIO.initGroupList();
+    }
     public boolean subscribed = false;
     public List<Device> deviceList;
     private String name;
 
     public DeviceGroup(String name) {
+        new DeviceGroup(name, false);
+    }
+
+    public DeviceGroup(String name, boolean subscribed) {
         this.setName(name);
+        this.subscribed = subscribed;
         deviceList = new ArrayList<>();
     }
 
     public static DeviceGroup searchGroup(String name) {
+        //TODO: 安全删除name = "Ungrouped Devices";
         if (name == null) {
             name = "Ungrouped Devices";
         }
@@ -81,6 +95,7 @@ public class DeviceGroup {
     }
 
     public boolean moveDevice(Device device, DeviceGroup targetGroup) {
+        //TODO: 因为现在转移设备组需要设备发来确认消息，所以也需要重做或者删除
         for (int index = 0; index < this.deviceList.size(); index++) {
             Device targetDevice = this.deviceList.get(index);
             if (targetDevice.name.equals(device.name)) {
