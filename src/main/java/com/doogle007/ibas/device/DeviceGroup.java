@@ -14,7 +14,7 @@ public class DeviceGroup {
         //完成后返回设备组
         return DeviceIO.initGroupList();
     }
-    public boolean subscribed = false;
+    public boolean subscribe = false;
 
     private boolean isDefaultGroup = false;
     public List<Device> deviceList;
@@ -24,9 +24,9 @@ public class DeviceGroup {
         this(name, false, false);
     }
 
-    public DeviceGroup(String name, boolean subscribed, boolean defaultGroup) {
+    public DeviceGroup(String name, boolean subscribe, boolean defaultGroup) {
         this.setName(name);
-        this.subscribed = subscribed;
+        this.subscribe = subscribe;
         this.isDefaultGroup = defaultGroup;
         deviceList = new ArrayList<>();
     }
