@@ -13,7 +13,7 @@ import org.json.JSONObject;
 public class Callback implements MqttCallback {
     public void connectionLost(Throwable cause) {
         Logger.warn("已失去连接");
-        Logger.warn(cause.getMessage());
+        Logger.warn(cause.toString());
         System.out.println("已失去连接");
     }
 
