@@ -30,7 +30,7 @@ public class Device implements Comparable<Device> {
     public static Device jsonToDevice(JSONObject jsonObject) {
         try {
             String logicalAddress = null;
-            String clientID = null;
+            String clientID;
             String group = null;
             String name = null;
             if (!jsonObject.isNull("ClientID")) {
@@ -46,30 +46,21 @@ public class Device implements Comparable<Device> {
             if (!jsonObject.isNull("LogicalAddress")) {
                 logicalAddress = jsonObject.getString("LogicalAddress");
             }
-            return new Device(name, logicalAddress, clientID,group);
+            Device device = new Device(name, logicalAddress, clientID,group);
+            if (!jsonObject.isNull("AlarmAuto")) {
+                device.switchAuto = jsonObject.getBoolean("AlarmAuto");
+            }
+            if (!jsonObject.isNull("AlarmManual")) {
+                device.switchManual = jsonObject.getBoolean("AlarmManual");
+            }
+            if (!jsonObject.isNull("Timestamp")) {
+                device.timestamp = jsonObject.getLong("Timestamp");
+            }
+            return device;
         } catch (JSONException e) {
             Logger.error(e.toString());
         }
         return null;
-    }
-
-    public static void AddDevice(Device newDevice) {
-        if (newDevice.switchManual || newDevice.switchAuto)
-            MessageController.addMessage("警报: 设备 " + newDevice.name + " 发出警报，请及时处理!");
-        for (DeviceGroup deviceGroup : DeviceGroup.DeviceGroupList)
-            for (int i = 0; i < deviceGroup.deviceList.size(); i++) {
-                Device inner_device = deviceGroup.deviceList.get(i);
-                if (inner_device.name.equals(newDevice.name)) {
-                    if (inner_device.timestamp < newDevice.timestamp) {
-                        deviceGroup.deviceList.set(i, newDevice);
-                        MessageController.addMessage("更新: 设备 " + newDevice.name + " 状态更新。");
-                    } else
-                        MessageController.addMessage("通知: 设备 " + newDevice.name + " 上传了更新，但该更新是过时的。");
-                    return;
-                }
-            }
-        DeviceGroup.searchGroup(null).deviceList.add(newDevice);
-        MessageController.addMessage("更新: 添加 " + newDevice.name + " 为新的设备。");
     }
 
     public static boolean allDisconnectCheck() {
@@ -106,8 +97,8 @@ public class Device implements Comparable<Device> {
         jsonObject.put("Group", group);
         jsonObject.put("LogicalAddress", logicalAddress);
         jsonObject.put("Timestamp", timestamp);
-        jsonObject.put("AlarmSwitchAuto", switchAuto);
-        jsonObject.put("AlarmSwitchManual", switchManual);
+        jsonObject.put("AlarmAuto", switchAuto);
+        jsonObject.put("AlarmManual", switchManual);
         return jsonObject.toString();
     }
 

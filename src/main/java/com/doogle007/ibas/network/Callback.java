@@ -2,6 +2,7 @@ package com.doogle007.ibas.network;
 
 import com.doogle007.ibas.Logger;
 import com.doogle007.ibas.device.DeviceGroup;
+import com.doogle007.ibas.device.DeviceIO;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -26,12 +27,7 @@ public class Callback implements MqttCallback {
         System.out.println("Message Arrived");
 
         //遗留代码，将在未来处理
-//        try {
-//            if (DeviceController.instance != null)
-//                DeviceController.refresh();
-//        } catch (Exception e) {
-//            Logger.error(e.getMessage());
-//        }
+        //TODO: 此处补充与DeviceController.refresh()相关代码
     }
 
     public void deliveryComplete(IMqttDeliveryToken token) {
@@ -46,7 +42,7 @@ public class Callback implements MqttCallback {
         else if (topic.contains("IBAS/system/device/group/")) {
             System.out.println("正在处理Group主题");
             String groupName = topic.replace("IBAS/system/device/group/", "");
-            //processGroupMessage(message, groupName);
+            processGroupMessage(message, groupName);
         }
         else
             System.out.println("无法处理该主题");
@@ -81,6 +77,7 @@ public class Callback implements MqttCallback {
 
             //完成后覆盖List中的源设备实例
             group.deviceList.set(index, device);
+            DeviceIO.writeDevice(device);
 
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -123,16 +120,5 @@ public class Callback implements MqttCallback {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-
-
-        //调试内容，完成后记得删除
-        System.out.println("当前设备组总览");
-        System.out.println("默认组");
-        for(Device device : DeviceGroup.defaultGroup.deviceList)
-            System.out.println(device.name);
-        System.out.println("\n设备组");
-        for(DeviceGroup deviceGroup : DeviceGroup.DeviceGroupList)
-            for(Device device : deviceGroup.deviceList)
-                System.out.println(device.clientID + " "+device.name);
     }
 }
