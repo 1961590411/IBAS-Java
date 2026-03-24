@@ -14,12 +14,12 @@ public class MainApplication extends Application {
     public static void main(String[] args) {
         try {
             Connect.start();
-            Connect.groupSubTopicAdd("build_1");
         } catch (Exception e) {
             Logger.error("无法连接至云服务器");
             Logger.error(e.getMessage());
         }
-        //launch();
+
+        launch();
     }
 
     @Override

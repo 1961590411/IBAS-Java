@@ -26,8 +26,12 @@ public class Callback implements MqttCallback {
         processTopic(topic, message.toString());
         System.out.println("Message Arrived");
 
-        //遗留代码，将在未来处理
-        //TODO: 此处补充与DeviceController.refresh()相关代码
+        // 使用 Platform.runLater 确保在 JavaFX 主线程刷新 UI
+        javafx.application.Platform.runLater(() -> {
+            if (com.doogle007.ibas.controller.DeviceController.instance != null) {
+                com.doogle007.ibas.controller.DeviceController.refresh();
+            }
+        });
     }
 
     public void deliveryComplete(IMqttDeliveryToken token) {
