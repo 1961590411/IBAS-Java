@@ -59,6 +59,7 @@ public class DeviceGroup {
             return false;
         DeviceGroupList.addFirst(group);
         DeviceIO.createGroupFile(group.name);
+        DeviceIO.writeGroupConfig(group); // 新增：创建组时同时保存 config.json
         return true;
     }
 

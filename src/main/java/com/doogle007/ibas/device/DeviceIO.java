@@ -51,6 +51,32 @@ public class DeviceIO {
         }
     }
 
+    // 保存组配置信息（包括 subscribe）
+    public static void writeGroupConfig(DeviceGroup group) {
+        Path path = Paths.get("device/" + group.getName() + "/config.json");
+        try {
+            JSONObject config = new JSONObject();
+            config.put("name", group.getName());
+            config.put("subscribe", group.subscribe);
+            Files.writeString(path, config.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+            Logger.error("保存组配置出错: " + e.getMessage());
+        }
+    }
+
+    // 读取组配置信息
+    public static boolean readGroupSubscribe(String groupName) {
+        Path path = Paths.get("device/" + groupName + "/config.json");
+        if (Files.exists(path)) {
+            try {
+                String data = Files.readString(path);
+                JSONObject config = new JSONObject(data);
+                return config.optBoolean("subscribe", false);
+            } catch (IOException ignored) {}
+        }
+        return false;
+    }
+
     public static void writeDevice(Device device) {
         System.out.println("保存设备中，设备名称: " +  device.name);
         DeviceGroup group = DeviceGroup.includeDevice(device.name);
@@ -82,6 +108,12 @@ public class DeviceIO {
         }
         for (String fileName : groupNameList) {
             DeviceGroup group = new DeviceGroup(fileName);
+            group.deviceList = readDeviceList(fileName);
+            deviceGroupList.add(group);
+        }
+        for (String fileName : groupNameList) {
+            boolean sub = readGroupSubscribe(fileName); // 新增：读取持久化的变量
+            DeviceGroup group = new DeviceGroup(fileName, sub, fileName.equals("Default Group"));
             group.deviceList = readDeviceList(fileName);
             deviceGroupList.add(group);
         }
