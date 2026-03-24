@@ -19,7 +19,7 @@ public class MainApplication extends Application {
             Logger.error(e.getMessage());
         }
 
-        launch();
+        //launch();
     }
 
     @Override

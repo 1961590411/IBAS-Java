@@ -14,10 +14,10 @@ import java.util.stream.Stream;
 public class DeviceIO {
     public static List<Device> readDeviceList(String groupName) {
         List<Device> deviceList = new ArrayList<>();
-        //读取文件，若不存在则创建文件夹
         List<String> fileList = readDeviceFileList(groupName);
         for (String fileName : fileList) {
-            Path filePath = Paths.get("device/" + groupName + "/" + fileName);
+            // 关键修改：路径增加 /devices/
+            Path filePath = Paths.get("device/" + groupName + "/devices/" + fileName);
             try {
                 if (Files.exists(filePath)) {
                     String data = Files.readString(filePath);
@@ -25,97 +25,128 @@ public class DeviceIO {
                     Device device = Device.jsonToDevice(jsonObject);
                     if (device != null) {
                         device.online = false;
+                        deviceList.add(device);
                     }
-                    deviceList.add(device);
                 }
-            } catch (IOException ignored) {
-            }
+            } catch (IOException ignored) {}
         }
         return deviceList;
     }
 
     private static List<String> readDeviceFileList(String groupName) {
-        Path path = Paths.get("device/" + groupName);
+        // 关键修改：路径改为 device/{groupName}/devices/
+        Path path = Paths.get("device/" + groupName + "/devices");
         if (!Files.isDirectory(path)) {
             return new ArrayList<>();
         }
         try (Stream<Path> stream = Files.list(path)) {
             return stream
-                    .filter(Files::isRegularFile) // 仅限文件
-                    .map(p -> p.getFileName().toString()) // 转换为字符串文件名
-                    .filter(name -> name.toLowerCase().endsWith(".json")) // 过滤 JSON 后缀
-                    .collect(Collectors.toList()); // 收集到 List 中
+                    .filter(Files::isRegularFile)
+                    .map(p -> p.getFileName().toString())
+                    .filter(name -> name.toLowerCase().endsWith(".json"))
+                    .collect(Collectors.toList());
         } catch (IOException e) {
-            Logger.error("读取目录出错: " + e.getMessage());
+            Logger.error("读取设备目录出错: " + e.getMessage());
             return new ArrayList<>();
         }
     }
 
-    // 保存组配置信息（包括 subscribe）
+    /**
+     * 保存组配置信息
+     */
     public static void writeGroupConfig(DeviceGroup group) {
         Path path = Paths.get("device/" + group.getName() + "/config.json");
         try {
+            // 确保目录存在
+            Files.createDirectories(path.getParent());
             JSONObject config = new JSONObject();
             config.put("name", group.getName());
             config.put("subscribe", group.subscribe);
             Files.writeString(path, config.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            Logger.info("已更新组配置: " + group.getName());
         } catch (IOException e) {
             Logger.error("保存组配置出错: " + e.getMessage());
         }
     }
 
-    // 读取组配置信息
-    public static boolean readGroupSubscribe(String groupName) {
+    /**
+     * 读取组订阅状态，如果文件不存在或读取失败，抛出异常以便外层处理创建逻辑
+     */
+    private static boolean readGroupSubscribe(String groupName) throws IOException {
         Path path = Paths.get("device/" + groupName + "/config.json");
-        if (Files.exists(path)) {
-            try {
-                String data = Files.readString(path);
-                JSONObject config = new JSONObject(data);
-                return config.optBoolean("subscribe", false);
-            } catch (IOException ignored) {}
+        if (!Files.exists(path)) {
+            throw new IOException("Config file missing for group: " + groupName);
         }
-        return false;
+        String data = Files.readString(path);
+        JSONObject config = new JSONObject(data);
+        return config.optBoolean("subscribe", false);
     }
 
     public static void writeDevice(Device device) {
-        System.out.println("保存设备中，设备名称: " +  device.name);
         DeviceGroup group = DeviceGroup.includeDevice(device.name);
-        Path path = Paths.get("device/" + group.getName() + "/" + device.clientID + ".json");
+        // 关键修改：确保 devices 文件夹存在，并写入其中
+        Path dirPath = Paths.get("device/" + group.getName() + "/devices");
         try {
-            Files.writeString(path, device.toJson(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-            Logger.info("保存的设备名称：" + device.name);
-        } catch (IOException ignored) {
+            Files.createDirectories(dirPath); // 自动创建子文件夹
+            Path filePath = dirPath.resolve(device.clientID + ".json");
+            Files.writeString(filePath, device.toJson(),
+                    StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e) {
+            Logger.error("写入设备文件失败: " + e.getMessage());
         }
     }
-
-    public static List<DeviceGroup> initGroupList() {
-        //TODO: 因为在DeviceGroup中新写了初始化设备组的方法，这一段需要重写一下
-        //TODO: 还有，文件用唯一ID保存，不要用name了，实例-默认组ID：default_group
-        List<DeviceGroup> deviceGroupList = new ArrayList<>();
-        List<String> groupNameList;
-
+    private static List<String> readGroupDirectories() {
         Path path = Paths.get("device");
         if (!Files.isDirectory(path)) {
-            groupNameList = new ArrayList<>();
-        } else try (Stream<Path> stream = Files.list(path)) {
-            groupNameList = stream
-                    .filter(Files::isDirectory) // 仅限文件
-                    .map(p -> p.getFileName().toString()) // 转换为字符串文件名
-                    .toList(); // 收集到 List 中
-        } catch (IOException e) {
-            Logger.error("读取目录出错: " + e.getMessage());
+            // 如果 device 目录不存在，尝试创建它
+            try {
+                Files.createDirectories(path);
+            } catch (IOException e) {
+                Logger.error("创建 device 根目录失败: " + e.getMessage());
+            }
             return new ArrayList<>();
         }
-        for (String fileName : groupNameList) {
-            DeviceGroup group = new DeviceGroup(fileName);
-            group.deviceList = readDeviceList(fileName);
-            deviceGroupList.add(group);
+
+        try (Stream<Path> stream = Files.list(path)) {
+            return stream
+                    .filter(Files::isDirectory) // 过滤，只保留文件夹
+                    .map(p -> p.getFileName().toString()) // 获取文件夹名称
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            Logger.error("读取组目录出错: " + e.getMessage());
+            return new ArrayList<>();
         }
-        for (String fileName : groupNameList) {
-            boolean sub = readGroupSubscribe(fileName); // 新增：读取持久化的变量
-            DeviceGroup group = new DeviceGroup(fileName, sub, fileName.equals("Default Group"));
-            group.deviceList = readDeviceList(fileName);
+    }
+    public static List<DeviceGroup> initGroupList() {
+        List<DeviceGroup> deviceGroupList = new ArrayList<>();
+        List<String> groupNameList = readGroupDirectories(); // 获取所有组名
+
+        for (String groupName : groupNameList) {
+            boolean subscribe;
+            try {
+                subscribe = readGroupSubscribe(groupName);
+            } catch (Exception e) {
+                subscribe = false;
+                // 如果没有配置则创建默认配置
+                DeviceGroup stub = new DeviceGroup(groupName, false, groupName.equals("Default Group"));
+                writeGroupConfig(stub);
+            }
+
+            DeviceGroup group = new DeviceGroup(groupName, subscribe, groupName.equals("Default Group"));
+            group.deviceList = readDeviceList(groupName);
             deviceGroupList.add(group);
+
+            // --- 新增启动订阅逻辑 ---
+            if (subscribe) {
+                // 确保 MQTT 连接已初始化后调用
+                // 注意：这里需要确保 Connect 类已经准备就绪
+                try {
+                    com.doogle007.ibas.network.Connect.groupSubTopicAdd(groupName);
+                    Logger.info("启动自动订阅组主题: " + groupName);
+                } catch (Exception e) {
+                    Logger.error("启动订阅失败: " + groupName + ", 原因: " + e.getMessage());
+                }
+            }
         }
         return deviceGroupList;
     }
@@ -143,12 +174,12 @@ public class DeviceIO {
     }
 
     public static void createGroupFile(String name) {
-        Path path = Paths.get("device/" + name);
+        Path groupPath = Paths.get("device/" + name);
+        Path devicesPath = groupPath.resolve("devices"); // 新增子目录路径
         try {
-            // 创建目录（包括任何不存在的父目录）
-            Files.createDirectories(path);
-        } catch (IOException ignored) {
-        }
+            Files.createDirectories(groupPath);
+            Files.createDirectories(devicesPath); // 同时创建设备存放目录
+        } catch (IOException ignored) {}
     }
 
     public static void moveFileDevice(String device, String fromGroup, String toGroup) {

@@ -21,9 +21,12 @@ public class DeviceGroup {
     private String name;
 
     public DeviceGroup(String name) {
-        this(name, false, false);
+        this(name, false);
     }
 
+    public DeviceGroup(String name, boolean subscribe) {
+        this(name, subscribe, false);
+    }
     public DeviceGroup(String name, boolean subscribe, boolean defaultGroup) {
         this.setName(name);
         this.subscribe = subscribe;
@@ -124,7 +127,6 @@ public class DeviceGroup {
             Device targetDevice = this.deviceList.get(index);
             device.switchAuto = targetDevice.switchAuto;
             device.switchManual = targetDevice.switchManual;
-            System.out.println("DG: "+targetDevice.clientID + " "+targetDevice.name + " " + targetDevice.switchAuto + " " + targetDevice.switchManual);
             deviceList.set(index, device);
         }
 
@@ -162,15 +164,15 @@ public class DeviceGroup {
         System.out.println("正在设备组"+this.name+"中寻找设备"+clientID);
         System.out.println("当前组内设备:");
         for(Device device : this.deviceList)
-            System.out.println(device.clientID);
+            System.out.println(device.clientID + " " + device.name);
         for (int index = 0; index < this.deviceList.size(); index++) {
             Device device = this.deviceList.get(index);
             if (device.clientID.equals(clientID)) {
-                System.out.println("搜寻成功! Index序列号 "+index);
+                System.out.println("搜寻成功! Index序列号 "+index+ "\n");
                 return index;
             }
         }
-        System.out.println("未找到匹配的ClientID");
+        System.out.println("未找到匹配的ClientID\n");
         return -1;
     }
 }
