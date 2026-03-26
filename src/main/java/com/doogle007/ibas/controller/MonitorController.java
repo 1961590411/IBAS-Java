@@ -27,8 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Objects;
 
-public class DeviceController {
-    public static DeviceController instance;
+public class MonitorController {
+    public static MonitorController instance;
     public static DeviceGroup currentGroup;
     public static SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd-HH:mm");
     private final Image imageManualAlarm = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/doogle007/ibas/icons/manualAlarm.png")));
@@ -78,20 +78,22 @@ public class DeviceController {
         timelineDevice = new Timeline(new KeyFrame(Duration.seconds(5), event -> update()));
         timelineDevice.setCycleCount(Timeline.INDEFINITE);
         timelineDevice.play();
-        for (DeviceGroup group : DeviceGroup.DeviceGroupList)
-            choiceBoxGroups.getItems().add(group.getName());
+        for (DeviceGroup group : DeviceGroup.DeviceGroupList) {
+            if(group.subscribe)
+                choiceBoxGroups.getItems().add(group.getName());
+        }
         choiceBoxGroups.getSelectionModel().select(currentGroup.getName());
+
+        //TODO 按钮失活，添加修改删除功能暂时移除
         buttonEdit.setDisable(true);
         buttonDelete.setDisable(true);
+        buttonAdd.setDisable(true);
         buttonEdit.setOpacity(0.5);
         buttonDelete.setOpacity(0.5);
+        buttonAdd.setOpacity(0.5);
+
         choiceBoxGroups.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             currentGroup = DeviceGroup.searchGroup(newValue);
-            boolean active = currentGroup.getName().equals(DeviceGroup.searchGroup(null).getName());
-            buttonEdit.setDisable(active);
-            buttonDelete.setDisable(active);
-            buttonEdit.setOpacity(active ? 0.5 : 1);
-            buttonDelete.setOpacity(active ? 0.5 : 1);
             updateList();
         });
     }
@@ -203,6 +205,8 @@ public class DeviceController {
                     hBoxDevice.setStyle("-fx-border-color: #5FFF5F; -fx-border-width: 2; -fx-background-color: #F8F8F8; -fx-background-radius: 10; -fx-border-radius: 10");
             });
 
+            /*
+            //TODO 过期的不稳定内容，需要重新调试
             ContextMenu contextMenu = new ContextMenu();
             Menu menuMove = new Menu("移动设备至...");
             for (DeviceGroup group : DeviceGroup.DeviceGroupList) {
@@ -225,6 +229,7 @@ public class DeviceController {
                 if (event.getButton() == MouseButton.SECONDARY)
                     contextMenu.show(hBoxDevice, event.getScreenX(), event.getScreenY());
             });
+             */
 
             vBoxDevice.getChildren().add(hBoxDevice);
         }

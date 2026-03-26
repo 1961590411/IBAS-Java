@@ -88,7 +88,7 @@ public class GroupController {
         else if (name.isEmpty())
             labelFail.setText("设备组名称不可为空");
         else {
-            DeviceController.currentGroup.setName(name);
+            MonitorController.currentGroup.setName(name);
             onButtonCloseClick();
         }
     }
@@ -96,11 +96,11 @@ public class GroupController {
     @FXML
     protected void onButtonDeleteClick() {
         boolean check = checkBoxDelete.isSelected();
-        if (DeviceController.currentGroup.equals(DeviceGroup.searchGroup(null)))
+        if (MonitorController.currentGroup.equals(DeviceGroup.searchGroup(null)))
             labelFail.setText("未归类设备组不可以删除");
         else {
-            DeviceGroup.removeGroup(DeviceController.currentGroup.getName(), check);
-            DeviceController.currentGroup = DeviceGroup.searchGroup(null);
+            DeviceGroup.removeGroup(MonitorController.currentGroup.getName(), check);
+            MonitorController.currentGroup = DeviceGroup.searchGroup(null);
             onButtonCloseClick();
         }
     }

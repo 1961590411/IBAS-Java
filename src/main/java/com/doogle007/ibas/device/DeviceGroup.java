@@ -37,7 +37,7 @@ public class DeviceGroup {
     public static DeviceGroup searchGroup(String name) {
         //TODO: 安全删除name = "Ungrouped Devices";
         if (name == null) {
-            name = "Ungrouped Devices";
+            name = "";
         }
         for (DeviceGroup deviceGroup : DeviceGroupList) {
             if (deviceGroup.name.equals(name)) {

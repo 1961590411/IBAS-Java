@@ -87,7 +87,7 @@ public class HelloController {
             buttonAbout.setStyle("-fx-background-color: #dddddd;");
 
             index = 0;
-            FXMLLoader fxmlAbout = new FXMLLoader(MainApplication.class.getResource("deviceList.fxml"));
+            FXMLLoader fxmlAbout = new FXMLLoader(MainApplication.class.getResource("monitor.fxml"));
             innerPane.getChildren().clear();
             innerPane.getChildren().add(fxmlAbout.load());
         }

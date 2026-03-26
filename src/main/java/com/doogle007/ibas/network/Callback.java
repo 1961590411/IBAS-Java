@@ -1,6 +1,7 @@
 package com.doogle007.ibas.network;
 
 import com.doogle007.ibas.Logger;
+import com.doogle007.ibas.controller.MonitorController;
 import com.doogle007.ibas.device.DeviceGroup;
 import com.doogle007.ibas.device.DeviceIO;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -28,8 +29,8 @@ public class Callback implements MqttCallback {
 
         // 使用 Platform.runLater 确保在 JavaFX 主线程刷新 UI
         javafx.application.Platform.runLater(() -> {
-            if (com.doogle007.ibas.controller.DeviceController.instance != null) {
-                com.doogle007.ibas.controller.DeviceController.refresh();
+            if (MonitorController.instance != null) {
+                MonitorController.refresh();
             }
         });
     }
