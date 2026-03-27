@@ -21,6 +21,8 @@ public class HelloController {
     @FXML
     private StackPane buttonClose;
     @FXML
+    private HBox buttonMonitor;
+    @FXML
     private HBox buttonDevice;
     @FXML
     private HBox buttonMessage;
@@ -78,9 +80,10 @@ public class HelloController {
     }
 
     @FXML
-    protected void onButtonDeviceClick() throws IOException {
+    protected void onButtonMonitorClick() throws IOException {
         if (index != 0) {
-            buttonDevice.setStyle("-fx-background-color: #bbbbbb;");
+            buttonMonitor.setStyle("-fx-background-color: #bbbbbb;");
+            buttonDevice.setStyle("-fx-background-color: #dddddd;");
             buttonMessage.setStyle("-fx-background-color: #dddddd;");
             buttonServer.setStyle("-fx-background-color: #dddddd;");
             buttonSetting.setStyle("-fx-background-color: #dddddd;");
@@ -94,14 +97,33 @@ public class HelloController {
     }
 
     @FXML
-    protected void onButtonMessageClick() throws IOException {
+    protected void onButtonDeviceClick() throws IOException {
         if (index != 1) {
+            buttonMonitor.setStyle("-fx-background-color: #dddddd;");
+            buttonDevice.setStyle("-fx-background-color: #bbbbbb;");
+            buttonMessage.setStyle("-fx-background-color: #dddddd;");
+            buttonServer.setStyle("-fx-background-color: #dddddd;");
+            buttonSetting.setStyle("-fx-background-color: #dddddd;");
+            buttonAbout.setStyle("-fx-background-color: #dddddd;");
+
+            index = 1;
+
+            FXMLLoader fxmlAbout = new FXMLLoader(MainApplication.class.getResource("device.fxml"));
+            innerPane.getChildren().clear();
+            innerPane.getChildren().add(fxmlAbout.load());
+        }
+    }
+
+    @FXML
+    protected void onButtonMessageClick() throws IOException {
+        if (index != 2) {
+            buttonMonitor.setStyle("-fx-background-color: #dddddd;");
             buttonDevice.setStyle("-fx-background-color: #dddddd;");
             buttonMessage.setStyle("-fx-background-color: #bbbbbb;");
             buttonServer.setStyle("-fx-background-color: #dddddd;");
             buttonSetting.setStyle("-fx-background-color: #dddddd;");
             buttonAbout.setStyle("-fx-background-color: #dddddd;");
-            index = 1;
+            index = 2;
             FXMLLoader fxmlAbout = new FXMLLoader(MainApplication.class.getResource("message.fxml"));
             innerPane.getChildren().clear();
             innerPane.getChildren().add(fxmlAbout.load());
@@ -110,14 +132,15 @@ public class HelloController {
 
     @FXML
     protected void onButtonServerClick() throws IOException {
-        if (index != 2) {
+        if (index != 3) {
+            buttonMonitor.setStyle("-fx-background-color: #dddddd;");
             buttonDevice.setStyle("-fx-background-color: #dddddd;");
             buttonMessage.setStyle("-fx-background-color: #dddddd;");
             buttonServer.setStyle("-fx-background-color: #bbbbbb;");
             buttonSetting.setStyle("-fx-background-color: #dddddd;");
             buttonAbout.setStyle("-fx-background-color: #dddddd;");
 
-            index = 2;
+            index = 3;
 
             FXMLLoader fxmlAbout = new FXMLLoader(MainApplication.class.getResource("server.fxml"));
             innerPane.getChildren().clear();
@@ -127,14 +150,15 @@ public class HelloController {
 
     @FXML
     protected void onButtonSettingClick() throws IOException {
-        if (index != 3) {
+        if (index != 4) {
+            buttonMonitor.setStyle("-fx-background-color: #dddddd;");
             buttonDevice.setStyle("-fx-background-color: #dddddd;");
             buttonMessage.setStyle("-fx-background-color: #dddddd;");
             buttonServer.setStyle("-fx-background-color: #dddddd;");
             buttonSetting.setStyle("-fx-background-color: #bbbbbb;");
             buttonAbout.setStyle("-fx-background-color: #dddddd;");
 
-            index = 3;
+            index = 4;
 
             FXMLLoader fxmlAbout = new FXMLLoader(MainApplication.class.getResource("setting.fxml"));
             innerPane.getChildren().clear();
@@ -144,14 +168,15 @@ public class HelloController {
 
     @FXML
     protected void onButtonAboutClick() throws IOException {
-        if (index != 4) {
+        if (index != 5) {
+            buttonMonitor.setStyle("-fx-background-color: #dddddd;");
             buttonDevice.setStyle("-fx-background-color: #dddddd;");
             buttonMessage.setStyle("-fx-background-color: #dddddd;");
             buttonServer.setStyle("-fx-background-color: #dddddd;");
             buttonSetting.setStyle("-fx-background-color: #dddddd;");
             buttonAbout.setStyle("-fx-background-color: #bbbbbb;");
 
-            index = 4;
+            index = 5;
 
             FXMLLoader fxmlAbout = new FXMLLoader(MainApplication.class.getResource("aboutInfo.fxml"));
             innerPane.getChildren().clear();

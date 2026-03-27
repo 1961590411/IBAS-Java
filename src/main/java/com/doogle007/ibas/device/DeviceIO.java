@@ -205,9 +205,10 @@ public class DeviceIO {
         }
     }
 
-    public static void deleteDevice(Device targetDevice) {
+    public static void deleteDevice(Device targetDevice, DeviceGroup targetGroup) {
         System.out.println("删除设备中，设备名称: " +  targetDevice.name);
-        Path path = Paths.get("device/" + targetDevice.group + "/" + targetDevice.clientID + ".json");
+        System.out.println("文件路径: " + "device/" + targetGroup.getName() + "/devices/" + targetDevice.clientID + ".json");
+        Path path = Paths.get("device/" + targetGroup.getName() + "/devices/" + targetDevice.clientID + ".json");
         try {
             Files.delete(path);
             System.out.println("删除成功");

@@ -1,6 +1,5 @@
 package com.doogle007.ibas.device;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,35 +33,13 @@ public class DeviceGroup {
         deviceList = new ArrayList<>();
     }
 
-    public static boolean addGroup(DeviceGroup group) {
+    public static void addGroup(DeviceGroup group) {
         if (searchGroupIndex(group.name) >= 0)
-            return false;
+            return;
         DeviceGroupList.addFirst(group);
         DeviceIO.createGroupFile(group.name);
         DeviceIO.writeGroupConfig(group); // 新增：创建组时同时保存 config.json
-        return true;
     }
-
-    /*
-    public static void removeGroup(String name, boolean remain) {
-        int index = searchGroupIndex(name);
-        if (index < 0)
-            return;
-        List<Device> removedList = remain ? DeviceGroupList.get(index).deviceList : null;
-        DeviceGroupList.remove(index);
-        if (remain) {
-            DeviceGroup defaultGroup = searchGroup(null);
-            for (Device device : removedList) {
-                defaultGroup.deviceList.add(device);
-                DeviceIO.writeDevice(device);
-            }
-        }
-        try {
-            DeviceIO.deleteGroupFile(name);
-        } catch (IOException ignored) {
-        }
-    }
-     */
 
     public static int searchGroupIndex(String name) {
         for (int index = 0; index < DeviceGroupList.size(); index++) {
@@ -79,19 +56,6 @@ public class DeviceGroup {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void moveDevice(Device device, DeviceGroup targetGroup) {
-        //TODO: 因为现在转移设备组需要设备发来确认消息，并由updateDevice()来完成，所以也需要重做或者删除
-        for (int index = 0; index < this.deviceList.size(); index++) {
-            Device targetDevice = this.deviceList.get(index);
-            if (targetDevice.name.equals(device.name)) {
-                targetGroup.deviceList.add(device);
-                this.deviceList.remove(index);
-                DeviceIO.moveFileDevice(device.name, this.name, targetGroup.name);
-                return;
-            }
-        }
     }
 
     public void updateDevice(Device device) {
@@ -116,29 +80,33 @@ public class DeviceGroup {
             if(group.name.equals(this.name))
                 continue;
             //检索其他设备组
-            for(Device targetDevice : group.deviceList){
-                if(targetDevice.clientID.equals(device.clientID)){
-                    device.switchAuto = targetDevice.switchAuto;
-                    device.switchManual = targetDevice.switchManual;
-                    deviceList.remove(targetDevice);
-                    DeviceIO.deleteDevice(targetDevice);
-                }
-            }
+            deleteDeviceFromGroup(device, group);
         }
         //别忘了检查默认组
         if(!isDefaultGroup){
-            for(Device targetDevice : defaultGroup.deviceList){
-                if(targetDevice.clientID.equals(device.clientID)){
-                    deviceList.remove(targetDevice);
-                    DeviceIO.deleteDevice(targetDevice);
-                }
-            }
+            deleteDeviceFromGroup(device, defaultGroup);
         }
 
         //保存JSON字符串
         DeviceIO.writeDevice(device);
     }
 
+    private static void deleteDeviceFromGroup(Device device, DeviceGroup group) {
+        //在组中搜寻ID相同的设备，继承设备的警报参数，随后删除设备
+        for(int index = 0; index < group.deviceList.size(); index++){
+            Device targetDevice = group.deviceList.get(index);
+            if(targetDevice.clientID.equals(device.clientID)){
+                device.switchAuto = targetDevice.switchAuto;
+                device.switchManual = targetDevice.switchManual;
+
+                System.out.println("正在删除设备: "+device.name);
+                if(!group.isDefaultGroup)
+                    DeviceIO.deleteDevice(device, group);
+                group.deviceList.remove(index);
+                break;
+            }
+        }
+    }
     public int searchDeviceIndex(String clientID) {
         System.out.println("正在设备组"+this.name+"中寻找设备"+clientID);
         System.out.println("当前组内设备:");

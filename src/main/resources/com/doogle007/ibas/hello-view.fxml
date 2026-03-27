@@ -34,6 +34,19 @@
                               <Circle fill="TRANSPARENT" radius="30.0" stroke="#dddddd" strokeType="OUTSIDE" strokeWidth="12.5" />
                            </children>
                         </StackPane>
+                        <HBox fx:id="buttonMonitor" alignment="CENTER_LEFT" onMouseClicked="#onButtonMonitorClick" prefHeight="40.0" spacing="5.0">
+                           <children>
+                              <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/device.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="监控" textFill="#666666" />
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
                         <HBox fx:id="buttonDevice" alignment="CENTER_LEFT" onMouseClicked="#onButtonDeviceClick" prefHeight="40.0" spacing="5.0">
                            <children>
                               <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">

@@ -1,6 +1,7 @@
 package com.doogle007.ibas.network;
 
 import com.doogle007.ibas.Logger;
+import com.doogle007.ibas.controller.DeviceController;
 import com.doogle007.ibas.controller.MonitorController;
 import com.doogle007.ibas.device.DeviceGroup;
 import com.doogle007.ibas.device.DeviceIO;
@@ -31,6 +32,9 @@ public class Callback implements MqttCallback {
         javafx.application.Platform.runLater(() -> {
             if (MonitorController.instance != null) {
                 MonitorController.refresh();
+            }
+            if (DeviceController.instance != null) {
+                DeviceController.refresh();
             }
         });
     }
