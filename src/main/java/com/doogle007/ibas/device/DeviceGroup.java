@@ -34,29 +34,6 @@ public class DeviceGroup {
         deviceList = new ArrayList<>();
     }
 
-    public static DeviceGroup searchGroup(String name) {
-        //TODO: 安全删除name = "Ungrouped Devices";
-        if (name == null) {
-            name = "";
-        }
-        for (DeviceGroup deviceGroup : DeviceGroupList) {
-            if (deviceGroup.name.equals(name)) {
-                return deviceGroup;
-            }
-        }
-        DeviceGroup deviceGroup = new DeviceGroup(name);
-        addGroup(deviceGroup);
-        return deviceGroup;
-    }
-
-    public static DeviceGroup includeDevice(String name) {
-        for (DeviceGroup deviceGroup : DeviceGroupList)
-            for (Device device : deviceGroup.deviceList)
-                if (device.name.equals(name))
-                    return deviceGroup;
-        return searchGroup(null);
-    }
-
     public static boolean addGroup(DeviceGroup group) {
         if (searchGroupIndex(group.name) >= 0)
             return false;
@@ -66,6 +43,7 @@ public class DeviceGroup {
         return true;
     }
 
+    /*
     public static void removeGroup(String name, boolean remain) {
         int index = searchGroupIndex(name);
         if (index < 0)
@@ -84,6 +62,7 @@ public class DeviceGroup {
         } catch (IOException ignored) {
         }
     }
+     */
 
     public static int searchGroupIndex(String name) {
         for (int index = 0; index < DeviceGroupList.size(); index++) {

@@ -83,11 +83,16 @@ public class DeviceIO {
     }
 
     public static void writeDevice(Device device) {
-        DeviceGroup group = DeviceGroup.includeDevice(device.name);
-        // 关键修改：确保 devices 文件夹存在，并写入其中
-        Path dirPath = Paths.get("device/" + group.getName() + "/devices");
+        if(DeviceGroup.searchGroupIndex(device.group) < 0){
+            Logger.error("写入设备时出现错误: 未找到归属的设备组");
+            return;
+        }
+
+        //构建文件路径
+        Path dirPath = Paths.get("device/" + device.group + "/devices");
         try {
-            Files.createDirectories(dirPath); // 自动创建子文件夹
+            //保存并自动创建子文件夹
+            Files.createDirectories(dirPath);
             Path filePath = dirPath.resolve(device.clientID + ".json");
             Files.writeString(filePath, device.toJson(),
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);

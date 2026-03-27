@@ -67,8 +67,6 @@ public class MonitorController {
 
     @FXML
     private void initialize() {
-        if (currentGroup == null)
-            currentGroup = DeviceGroup.searchGroup(null);
         if (instance != null) {
             instance.timelineDevice.stop();
         }
@@ -78,22 +76,21 @@ public class MonitorController {
         timelineDevice = new Timeline(new KeyFrame(Duration.seconds(5), event -> update()));
         timelineDevice.setCycleCount(Timeline.INDEFINITE);
         timelineDevice.play();
-        for (DeviceGroup group : DeviceGroup.DeviceGroupList) {
-            if(group.subscribe)
-                choiceBoxGroups.getItems().add(group.getName());
-        }
-        choiceBoxGroups.getSelectionModel().select(currentGroup.getName());
+        updateChoiceBox();
+        if(currentGroup != null)
+            choiceBoxGroups.getSelectionModel().select(currentGroup.getName());
 
         //TODO 按钮失活，添加修改删除功能暂时移除
         buttonEdit.setDisable(true);
-        buttonDelete.setDisable(true);
-        buttonAdd.setDisable(true);
+        //buttonDelete.setDisable(true);
+        //buttonAdd.setDisable(true);
         buttonEdit.setOpacity(0.5);
-        buttonDelete.setOpacity(0.5);
-        buttonAdd.setOpacity(0.5);
+        //buttonDelete.setOpacity(0.5);
+        //buttonAdd.setOpacity(0.5);
 
         choiceBoxGroups.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            currentGroup = DeviceGroup.searchGroup(newValue);
+            int index = DeviceGroup.searchGroupIndex(newValue);
+            currentGroup = index >= 0 ? DeviceGroup.DeviceGroupList.get(index) : null;
             updateList();
         });
     }
@@ -116,6 +113,8 @@ public class MonitorController {
 
     protected void updateList() {
         vBoxDevice.getChildren().clear();
+        if(currentGroup == null)
+            return;
         //插入排序，红色在上，绿色居中，灰色靠下
         for (int index = 0; index < currentGroup.deviceList.size(); index++) {
             currentGroup.deviceList.sort(Comparator.naturalOrder());
@@ -330,11 +329,19 @@ public class MonitorController {
         button.setStyle("");
     }
     private void updateChoiceBox() {
-        String name = currentGroup.getName();
         choiceBoxGroups.getItems().clear();
         for (DeviceGroup group : DeviceGroup.DeviceGroupList)
-            choiceBoxGroups.getItems().add(group.getName());
-        currentGroup = DeviceGroup.searchGroup(name);
-        choiceBoxGroups.getSelectionModel().select(name);
+            if(group.subscribe)
+                choiceBoxGroups.getItems().add(group.getName());
+
+        if(currentGroup == null) {
+            choiceBoxGroups.getSelectionModel().clearSelection();
+            return;
+        }
+
+        if(!currentGroup.subscribe) {
+            choiceBoxGroups.getSelectionModel().clearSelection();
+            currentGroup = null;
+        }
     }
 }
